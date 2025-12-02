@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { 
   Home, 
   ShoppingBag, 
@@ -8,30 +8,54 @@ import {
   Search, 
   Plus, 
   Minus, 
-  ChevronRight,
+  ChevronRight, 
   ShoppingCart,
-  Bell
+  Bell,
+  MapPin,
+  Filter,
+  FileText,
+  Star,
+  Users,
+  Settings,
+  HelpCircle,
+  LogOut,
+  Coffee,
+  Carrot,
+  Beef,
+  Menu,
+  Box
 } from 'lucide-react';
 import { MOCK_PRODUCTS, MOCK_ORDERS } from '../../services/mockData';
-import { Product } from '../../types';
+import { Product, OrderStatus } from '../../types';
 
 interface CartItem extends Product {
   quantity: number;
 }
 
 const StoreApp: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'home' | 'order' | 'history' | 'profile'>('home');
+  // Navigation: Home | Order (History) | Shop (Catalog) | Profile
+  const [activeTab, setActiveTab] = useState<'home' | 'history' | 'shop' | 'profile'>('home');
   const [selectedCategory, setSelectedCategory] = useState('全部');
   const [cart, setCart] = useState<CartItem[]>([]);
+  const [orderStatusFilter, setOrderStatusFilter] = useState<string>('all');
 
   // Derived state
-  const categories = ['全部', '蔬菜类', '水果类', '肉禽类', '乳制品', '调味品', '粮油类'];
+  const categories = ['全部', '叶菜类', '根茎类', '豆类', '调味类', '肉类', '海鲜类'];
+  
   const filteredProducts = selectedCategory === '全部' 
     ? MOCK_PRODUCTS 
     : MOCK_PRODUCTS.filter(p => p.category === selectedCategory);
 
   const cartTotal = cart.reduce((sum, item) => sum + item.quantity * item.price, 0);
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+  // Home Stats
+  const homeStats = {
+    notOrdered: 3,
+    submitted: 5,
+    auditing: 2,
+    approved: 8
+  };
 
   const updateCart = (product: Product, delta: number) => {
     setCart(prev => {
@@ -47,250 +71,399 @@ const StoreApp: React.FC = () => {
     });
   };
 
+  // Helper icons for categories
+  const getCategoryIcon = (cat: string) => {
+    switch(cat) {
+      case '叶菜类': return <Carrot className="text-green-600" size={24} />;
+      case '根茎类': return <Carrot className="text-orange-500" size={24} />;
+      case '肉类': return <Beef className="text-red-500" size={24} />;
+      case '调味类': return <Coffee className="text-amber-700" size={24} />; // Using coffee as placeholder
+      default: return <Menu className="text-blue-500" size={24} />;
+    }
+  };
+
   const renderHome = () => (
-    <div className="flex-1 bg-gray-50 overflow-y-auto pb-20">
+    <div className="flex-1 bg-gray-50 overflow-y-auto pb-24 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
       {/* Header */}
-      <div className="bg-blue-600 p-6 text-white rounded-b-3xl shadow-lg relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-10 -mt-10"></div>
-        <div className="relative z-10 flex justify-between items-start">
-           <div>
-             <h1 className="text-xl font-bold">五华区南屏街店</h1>
-             <p className="text-blue-100 text-sm mt-1">负责人：张三</p>
+      <div className="bg-green-500 pt-12 pb-24 px-4 rounded-b-[40px] shadow-sm relative">
+        <div className="flex justify-between items-start mb-4">
+           <div className="text-white">
+             <h1 className="text-xl font-bold">你好，李店长</h1>
+             <div className="flex items-center gap-1 text-green-100 text-sm mt-1">
+               <MapPin size={14} /> 翠湖店
+             </div>
            </div>
-           <Bell className="text-blue-100" />
+           <div className="relative">
+             <Bell className="text-white" />
+             <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full border border-green-500"></span>
+           </div>
         </div>
         
-        {/* Status Card */}
-        <div className="mt-6 bg-white rounded-xl p-4 shadow-sm text-gray-800 flex items-center justify-between">
-           <div>
-             <div className="text-sm text-gray-500 mb-1">今日订货状态</div>
-             <div className="text-lg font-bold text-orange-500 flex items-center gap-2">
-               <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse"></span>
-               未下单
-             </div>
-             <div className="text-xs text-gray-400 mt-1">截止时间: 10:00 (剩2小时)</div>
-           </div>
-           <button 
-             onClick={() => setActiveTab('order')}
-             className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-blue-200 shadow-md active:scale-95 transition-transform"
-           >
-             去下单
-           </button>
+        {/* Search Bar */}
+        <div className="bg-white rounded-full flex items-center px-4 py-3 shadow-sm">
+           <Search size={18} className="text-gray-400 mr-2" />
+           <input type="text" placeholder="搜索商品名称" className="flex-1 outline-none text-sm" />
         </div>
       </div>
 
-      {/* Notice Bar */}
-      <div className="mx-4 mt-4 bg-orange-50 text-orange-700 text-xs px-3 py-2 rounded-lg flex items-center gap-2 border border-orange-100">
-        <Bell size={12} />
-        <span>通知：明日部分叶菜供应紧张，请提前备货。</span>
+      {/* Status Card - Floating */}
+      <div className="mx-4 -mt-16 bg-white rounded-2xl shadow-sm p-4 relative z-10 border border-gray-100">
+         <div className="flex justify-between items-center mb-4 border-b border-gray-50 pb-2">
+            <h3 className="font-bold text-gray-800">今日订货状态</h3>
+            <span className="text-xs text-gray-400">2024-01-15</span>
+         </div>
+         <div className="grid grid-cols-4 gap-2 text-center">
+            <div className="flex flex-col items-center">
+               <span className="text-xl font-bold text-orange-500">{homeStats.notOrdered}</span>
+               <span className="text-xs text-gray-500 mt-1">未下单</span>
+            </div>
+            <div className="flex flex-col items-center">
+               <span className="text-xl font-bold text-gray-800">{homeStats.submitted}</span>
+               <span className="text-xs text-gray-500 mt-1">已下单</span>
+            </div>
+            <div className="flex flex-col items-center">
+               <span className="text-xl font-bold text-gray-800">{homeStats.auditing}</span>
+               <span className="text-xs text-gray-500 mt-1">审核中</span>
+            </div>
+            <div className="flex flex-col items-center">
+               <span className="text-xl font-bold text-green-600">{homeStats.approved}</span>
+               <span className="text-xs text-gray-500 mt-1">已审核</span>
+            </div>
+         </div>
       </div>
 
-      {/* Quick Stats */}
-      <div className="grid grid-cols-2 gap-3 mx-4 mt-4">
-        <div className="bg-white p-4 rounded-xl shadow-sm">
-           <div className="text-xs text-gray-400">本月订货</div>
-           <div className="text-xl font-bold mt-1">26 <span className="text-xs font-normal text-gray-400">次</span></div>
-        </div>
-        <div className="bg-white p-4 rounded-xl shadow-sm">
-           <div className="text-xs text-gray-400">常用商品</div>
-           <div className="text-xl font-bold mt-1">12 <span className="text-xs font-normal text-gray-400">种</span></div>
-        </div>
+      {/* One-click Order Button */}
+      <div className="mx-4 mt-4">
+         <button 
+           onClick={() => setActiveTab('shop')}
+           className="w-full bg-green-500 hover:bg-green-600 text-white py-3.5 rounded-xl font-bold shadow-lg shadow-green-200 flex items-center justify-center gap-2 transition-all active:scale-[0.98]"
+         >
+           <ShoppingCart size={20} /> 一键进入下单
+         </button>
       </div>
 
-      {/* Recent Orders */}
+      {/* Categories Grid */}
       <div className="mx-4 mt-6">
-        <div className="flex justify-between items-center mb-3">
-          <h3 className="font-bold text-gray-800">最近订单</h3>
-          <span className="text-xs text-gray-400" onClick={() => setActiveTab('history')}>查看全部</span>
-        </div>
-        {MOCK_ORDERS.slice(0, 2).map(order => (
-          <div key={order.id} className="bg-white p-4 rounded-xl shadow-sm mb-3 border border-gray-100">
-            <div className="flex justify-between mb-2">
-               <span className="text-sm font-medium">{order.orderDate.split(' ')[0]}</span>
-               <span className={`text-xs px-2 py-0.5 rounded ${order.status === 'Approved' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'}`}>
-                 {order.status === 'Approved' ? '已审核' : order.status}
-               </span>
-            </div>
-            <div className="text-xs text-gray-500 flex justify-between">
-              <span>共 {order.totalQuantity} 件商品</span>
-              <ChevronRight size={14} />
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-
-  const renderOrder = () => (
-    <div className="flex-1 flex flex-col h-screen bg-white">
-      {/* Header */}
-      <div className="p-4 border-b border-gray-100 flex items-center gap-3">
-        <div className="flex-1 bg-gray-100 rounded-full px-4 py-2 flex items-center gap-2 text-sm text-gray-500">
-           <Search size={16} />
-           <span>搜索商品...</span>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="flex-1 flex overflow-hidden relative">
-        {/* Sidebar */}
-        <div className="w-24 bg-gray-50 overflow-y-auto custom-scrollbar">
-          {categories.map(cat => (
-            <div 
-              key={cat}
-              onClick={() => setSelectedCategory(cat)}
-              className={`p-4 text-xs font-medium text-center cursor-pointer transition-colors relative ${
-                selectedCategory === cat ? 'bg-white text-blue-600' : 'text-gray-500 hover:bg-gray-100'
-              }`}
-            >
-              {selectedCategory === cat && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-4 bg-blue-600 rounded-r"></div>}
-              {cat}
-            </div>
-          ))}
-        </div>
-
-        {/* Product List */}
-        <div className="flex-1 overflow-y-auto p-3 pb-24 custom-scrollbar">
-          <div className="mb-2 text-xs text-gray-500 font-medium px-1">{selectedCategory} ({filteredProducts.length})</div>
-          {filteredProducts.map(product => {
-             const cartItem = cart.find(c => c.id === product.id);
-             const qty = cartItem?.quantity || 0;
-             return (
-               <div key={product.id} className="flex gap-3 mb-4 bg-white p-2 rounded-lg">
-                 <img src={product.imageUrl} className="w-20 h-20 object-cover rounded-lg bg-gray-100" alt="" />
-                 <div className="flex-1 flex flex-col justify-between">
-                   <div>
-                     <h4 className="font-bold text-sm text-gray-800">{product.name}</h4>
-                     <p className="text-xs text-gray-400 mt-1">{product.spec}</p>
-                   </div>
-                   <div className="flex justify-between items-end">
-                     <span className="text-red-500 font-bold text-sm">¥{product.price.toFixed(2)}<span className="text-gray-400 text-xs font-normal">/{product.unit}</span></span>
-                     
-                     {product.isActive ? (
-                       <div className="flex items-center gap-2">
-                         {qty > 0 && (
-                           <>
-                             <button onClick={() => updateCart(product, -1)} className="w-6 h-6 rounded-full border border-gray-300 flex items-center justify-center text-gray-500 active:bg-gray-100"><Minus size={12} /></button>
-                             <span className="text-sm font-medium w-4 text-center">{qty}</span>
-                           </>
-                         )}
-                         <button onClick={() => updateCart(product, 1)} className="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center active:bg-blue-700 shadow-sm"><Plus size={12} /></button>
-                       </div>
-                     ) : (
-                       <span className="text-xs bg-gray-100 text-gray-400 px-2 py-1 rounded">暂停供应</span>
-                     )}
-                   </div>
-                 </div>
+         <div className="flex justify-between items-center mb-3">
+            <h3 className="font-bold text-gray-800">商品分类</h3>
+            <span className="text-xs text-gray-400 flex items-center cursor-pointer" onClick={() => setActiveTab('shop')}>
+              全部 <ChevronRight size={14} />
+            </span>
+         </div>
+         <div className="grid grid-cols-5 gap-3">
+            {categories.slice(1, 6).map(cat => (
+               <div key={cat} className="flex flex-col items-center gap-2 cursor-pointer" onClick={() => { setSelectedCategory(cat); setActiveTab('shop'); }}>
+                  <div className="w-12 h-12 bg-gray-50 rounded-full flex items-center justify-center shadow-sm border border-gray-100">
+                     {getCategoryIcon(cat)}
+                  </div>
+                  <span className="text-xs text-gray-600">{cat}</span>
                </div>
-             )
-          })}
-        </div>
+            ))}
+         </div>
       </div>
 
-      {/* Cart Bar */}
-      {cart.length > 0 && (
-        <div className="absolute bottom-16 left-4 right-4 bg-gray-900 text-white rounded-full shadow-2xl p-3 flex justify-between items-center z-20">
-           <div className="flex items-center gap-3 pl-2">
-             <div className="relative">
-               <ShoppingCart size={24} className="text-white" />
-               <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center border border-gray-900">{cartCount}</span>
-             </div>
-             <div className="flex flex-col leading-tight">
-               <span className="font-bold text-lg">¥{cartTotal.toFixed(2)}</span>
-               <span className="text-[10px] text-gray-400">已选 {cart.length} 种商品</span>
-             </div>
-           </div>
-           <button className="bg-blue-600 px-6 py-2 rounded-full font-bold text-sm hover:bg-blue-500 transition-colors">
-             去结算
-           </button>
-        </div>
-      )}
+      {/* Hot Recommendations */}
+      <div className="mx-4 mt-6">
+         <h3 className="font-bold text-gray-800 mb-3">热销推荐</h3>
+         <div className="space-y-3">
+            {MOCK_PRODUCTS.slice(0, 3).map(product => (
+               <div key={product.id} className="bg-white p-3 rounded-xl shadow-sm border border-gray-100 flex gap-3">
+                  <img src={product.imageUrl} className="w-20 h-20 rounded-lg object-cover bg-gray-100" alt={product.name} />
+                  <div className="flex-1 flex flex-col justify-between py-1">
+                     <div>
+                        <h4 className="font-bold text-gray-800">{product.name}</h4>
+                        <span className="text-xs text-gray-400">/{product.unit}</span>
+                     </div>
+                     <div className="flex justify-between items-center">
+                        <span className="text-orange-500 font-bold">¥{product.price}</span>
+                        <button 
+                          onClick={() => updateCart(product, 1)}
+                          className="w-7 h-7 bg-green-50 text-green-600 rounded-full flex items-center justify-center hover:bg-green-500 hover:text-white transition-colors"
+                        >
+                           <Plus size={16} />
+                        </button>
+                     </div>
+                  </div>
+               </div>
+            ))}
+         </div>
+      </div>
     </div>
   );
 
   const renderHistory = () => (
-     <div className="flex-1 bg-gray-50 overflow-y-auto pb-20">
-       <div className="bg-white p-4 border-b border-gray-100 sticky top-0 z-10">
-         <h1 className="text-lg font-bold text-center">历史订单</h1>
+    <div className="flex-1 bg-gray-50 overflow-y-auto pb-24 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
+       <div className="bg-white sticky top-0 z-20">
+         <div className="pt-12 px-4 pb-4">
+            <h1 className="text-xl font-bold text-gray-900">采购订单</h1>
+         </div>
+         {/* Tabs */}
+         <div className="flex items-center px-4 border-b border-gray-100 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
+            {[
+              { id: 'all', label: '全部' },
+              { id: OrderStatus.Auditing, label: '审核中' },
+              { id: OrderStatus.Approved, label: '已通过' },
+              { id: OrderStatus.Rejected, label: '已驳回' }
+            ].map(tab => (
+               <button
+                 key={tab.id}
+                 onClick={() => setOrderStatusFilter(tab.id)}
+                 className={`px-4 py-3 text-sm font-medium whitespace-nowrap border-b-2 transition-colors ${
+                   orderStatusFilter === tab.id 
+                     ? 'border-gray-900 text-gray-900' 
+                     : 'border-transparent text-gray-500'
+                 }`}
+               >
+                 {tab.label}
+               </button>
+            ))}
+         </div>
        </div>
-       <div className="p-4 space-y-4">
-         {MOCK_ORDERS.map(order => (
-           <div key={order.id} className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-             <div className="flex justify-between items-center pb-3 border-b border-gray-50 mb-3">
-               <span className="text-sm font-bold text-gray-700">{order.orderDate}</span>
-               <span className={`text-xs px-2 py-1 rounded-full ${order.status === 'Approved' ? 'bg-green-100 text-green-700' : 'bg-blue-50 text-blue-600'}`}>
-                 {order.status === 'Approved' ? '已审核' : order.status}
-               </span>
+
+       <div className="p-4 space-y-3">
+          {MOCK_ORDERS.filter(o => orderStatusFilter === 'all' || o.status === orderStatusFilter).map(order => (
+             <div key={order.id} className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+                <div className="flex justify-between items-start mb-3 border-b border-gray-50 pb-3">
+                   <div className="flex gap-3">
+                      <div className="w-10 h-10 bg-blue-50 text-blue-500 rounded-lg flex items-center justify-center">
+                         <Box size={20} />
+                      </div>
+                      <div>
+                         <h3 className="font-bold text-gray-800 text-sm">{order.id}</h3>
+                         <div className="text-xs text-gray-400 mt-0.5">{order.orderDate.split(' ')[0]}</div>
+                      </div>
+                   </div>
+                   <span className={`text-xs px-2 py-1 rounded font-medium ${
+                     order.status === OrderStatus.Approved ? 'bg-green-50 text-green-600' :
+                     order.status === OrderStatus.Auditing ? 'bg-blue-50 text-blue-600' :
+                     'bg-orange-50 text-orange-600'
+                   }`}>
+                      {order.status === OrderStatus.Approved ? '已通过' : 
+                       order.status === OrderStatus.Auditing ? '审核中' : '待审核'}
+                   </span>
+                </div>
+                
+                <div className="flex justify-between items-center text-sm mb-3">
+                   <div className="text-gray-500">
+                      商品数量 <span className="text-gray-900 font-bold ml-1">{order.totalQuantity} 件</span>
+                   </div>
+                   <div className="text-gray-500">
+                      订单金额 <span className="text-blue-600 font-bold ml-1">¥2,580</span>
+                   </div>
+                </div>
+
+                <div className="flex justify-end pt-1">
+                   <button className="text-xs text-gray-500 border border-gray-200 px-3 py-1.5 rounded-full hover:bg-gray-50">
+                      查看详情 <ChevronRight size={10} className="inline ml-1" />
+                   </button>
+                </div>
              </div>
-             <div className="space-y-2 mb-3">
-               {order.items.slice(0, 2).map((item, i) => (
-                 <div key={i} className="flex justify-between text-sm">
-                    <span className="text-gray-600">{item.productName}</span>
-                    <span className="text-gray-900">x{item.quantityOrdered}</span>
-                 </div>
-               ))}
-               {order.items.length > 2 && <div className="text-xs text-gray-400">... 共 {order.items.length} 种商品</div>}
-             </div>
-             <div className="flex justify-between items-center pt-2">
-                <span className="text-sm font-bold">合计: {order.totalQuantity} 件</span>
-                <button className="text-blue-600 text-xs border border-blue-600 px-3 py-1 rounded-full">查看详情</button>
-             </div>
-           </div>
-         ))}
+          ))}
        </div>
-     </div>
+    </div>
+  );
+
+  const renderShop = () => (
+    <div className="flex-1 flex flex-col h-full bg-white">
+      {/* Search Header */}
+      <div className="p-3 border-b border-gray-100 bg-white z-20">
+         <div className="bg-gray-100 rounded-lg px-4 py-2 flex items-center text-gray-500 text-sm">
+            <Search size={16} className="mr-2" />
+            <span className="flex-1">搜索商品...</span>
+         </div>
+      </div>
+
+      <div className="flex-1 flex overflow-hidden relative">
+         {/* Sidebar Categories */}
+         <div className="w-24 bg-gray-50 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
+            {categories.map(cat => (
+               <div 
+                 key={cat}
+                 onClick={() => setSelectedCategory(cat)}
+                 className={`p-4 text-xs font-medium text-center cursor-pointer relative ${
+                   selectedCategory === cat 
+                     ? 'bg-white text-green-600' 
+                     : 'text-gray-500 hover:bg-gray-100'
+                 }`}
+               >
+                 {selectedCategory === cat && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-4 bg-green-500 rounded-r"></div>}
+                 {cat}
+               </div>
+            ))}
+         </div>
+
+         {/* Product List */}
+         <div className="flex-1 overflow-y-auto p-3 pb-32 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
+            <div className="flex justify-between items-center mb-3 px-1">
+               <span className="font-bold text-sm text-gray-800">{selectedCategory}</span>
+               <span className="text-xs text-gray-400">共 {filteredProducts.length} 种</span>
+            </div>
+
+            {filteredProducts.map(product => {
+               const qty = cart.find(c => c.id === product.id)?.quantity || 0;
+               return (
+                  <div key={product.id} className="flex gap-3 mb-4 bg-white p-2 rounded-xl border border-gray-50 shadow-sm">
+                     <img src={product.imageUrl} className="w-20 h-20 rounded-lg object-cover bg-gray-100" alt="" />
+                     <div className="flex-1 flex flex-col justify-between">
+                        <div>
+                           <h4 className="font-bold text-sm text-gray-800 line-clamp-1">{product.name}</h4>
+                           <div className="flex items-center gap-2 mt-1">
+                             <span className="text-xs text-gray-400 bg-gray-50 px-1.5 py-0.5 rounded">起订{product.minOrder}</span>
+                             <span className="text-xs text-gray-400">{product.spec}</span>
+                           </div>
+                        </div>
+                        <div className="flex justify-between items-end mt-2">
+                           <span className="text-orange-500 font-bold text-sm">¥{product.price}<span className="text-gray-300 text-xs font-normal">/{product.unit}</span></span>
+                           
+                           {product.isActive ? (
+                             <div className="flex items-center gap-2">
+                               {qty > 0 && (
+                                 <>
+                                   <button onClick={() => updateCart(product, -1)} className="w-6 h-6 rounded-full border border-gray-200 flex items-center justify-center text-gray-500 active:bg-gray-100"><Minus size={12} /></button>
+                                   <span className="text-sm font-medium w-4 text-center">{qty}</span>
+                                 </>
+                               )}
+                               <button onClick={() => updateCart(product, 1)} className="w-6 h-6 rounded-full bg-green-500 text-white flex items-center justify-center active:bg-green-600 shadow-sm"><Plus size={14} /></button>
+                             </div>
+                           ) : (
+                             <span className="text-xs text-gray-400">暂停供应</span>
+                           )}
+                        </div>
+                     </div>
+                  </div>
+               )
+            })}
+         </div>
+      </div>
+
+      {/* Cart Summary */}
+      {cart.length > 0 && (
+         <div className="absolute bottom-[90px] left-4 right-4 bg-gray-900 text-white rounded-full shadow-2xl p-2 pl-4 flex justify-between items-center z-30 animate-in slide-in-from-bottom-4">
+            <div className="flex items-center gap-3">
+               <div className="relative">
+                  <ShoppingCart size={24} className="text-green-400" />
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center border border-gray-900">{cartCount}</span>
+               </div>
+               <div className="flex flex-col">
+                  <span className="font-bold text-lg leading-none">¥{cartTotal.toFixed(2)}</span>
+                  <span className="text-[10px] text-gray-400">已选 {cart.length} 种商品</span>
+               </div>
+            </div>
+            <button className="bg-green-500 hover:bg-green-600 text-white px-6 py-2.5 rounded-full font-bold text-sm transition-colors shadow-lg shadow-green-900/50">
+               去结算
+            </button>
+         </div>
+      )}
+    </div>
   );
 
   const renderProfile = () => (
-    <div className="flex-1 bg-gray-50">
-      <div className="bg-blue-600 p-8 text-white flex items-center gap-4">
-        <div className="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center text-2xl font-bold">
-           张
-        </div>
-        <div>
-          <h2 className="text-xl font-bold">张三</h2>
-          <p className="text-blue-100 text-sm">门店负责人 | 13800138000</p>
-        </div>
-      </div>
-      <div className="mt-4 bg-white">
-        {['门店信息', '消息通知', '联系客服', '系统设置'].map(item => (
-          <div key={item} className="flex justify-between items-center p-4 border-b border-gray-50 active:bg-gray-50">
-            <span className="text-sm text-gray-700">{item}</span>
-            <ChevronRight size={16} className="text-gray-400" />
+    <div className="flex-1 bg-gray-50 overflow-y-auto pb-24 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
+       <div className="bg-green-500 pt-16 pb-20 px-6">
+          <div className="flex items-center gap-4">
+             <div className="w-16 h-16 rounded-full border-2 border-white/50 p-0.5">
+                <img src="https://picsum.photos/id/64/200/200" alt="Avatar" className="w-full h-full rounded-full object-cover" />
+             </div>
+             <div className="text-white">
+                <h2 className="text-xl font-bold">李店长</h2>
+                <div className="flex items-center gap-2 mt-1">
+                   <span className="text-xs bg-white/20 px-2 py-0.5 rounded border border-white/20">门店负责人</span>
+                </div>
+             </div>
           </div>
-        ))}
-        <div className="mt-6 p-4">
-          <button className="w-full py-3 text-red-500 bg-white rounded-lg border border-gray-200 text-sm font-medium">退出登录</button>
-        </div>
-      </div>
+          <div className="mt-4 flex items-center gap-2 text-green-100 text-sm">
+             <MapPin size={16} /> 五华区翠湖路88号
+          </div>
+       </div>
+
+       <div className="px-4 -mt-12 relative z-10 space-y-3">
+          {/* Stats */}
+          <div className="bg-white rounded-xl p-5 shadow-sm flex justify-between text-center divide-x divide-gray-100">
+             <div className="flex-1">
+                <div className="text-xl font-bold text-gray-900">28</div>
+                <div className="text-xs text-gray-400 mt-1">本月订单</div>
+             </div>
+             <div className="flex-1">
+                <div className="text-xl font-bold text-green-500">¥12.8K</div>
+                <div className="text-xs text-gray-400 mt-1">订货金额</div>
+             </div>
+             <div className="flex-1">
+                <div className="text-xl font-bold text-gray-900">96%</div>
+                <div className="text-xs text-gray-400 mt-1">通过率</div>
+             </div>
+          </div>
+
+          {/* Menu */}
+          <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+             {[
+               { icon: FileText, label: '账单明细', color: 'text-blue-500', bg: 'bg-blue-50' },
+               { icon: Star, label: '我的收藏', color: 'text-orange-500', bg: 'bg-orange-50' },
+               { icon: Users, label: '通讯录', color: 'text-green-500', bg: 'bg-green-50' },
+               { icon: Settings, label: '设置', color: 'text-gray-500', bg: 'bg-gray-100' },
+               { icon: HelpCircle, label: '帮助中心', color: 'text-gray-500', bg: 'bg-gray-100' },
+             ].map((item, idx) => (
+                <div key={idx} className="flex items-center p-4 border-b border-gray-50 active:bg-gray-50 cursor-pointer">
+                   <div className={`w-9 h-9 rounded-lg ${item.bg} flex items-center justify-center ${item.color} mr-3`}>
+                      <item.icon size={18} />
+                   </div>
+                   <span className="flex-1 text-sm font-medium text-gray-700">{item.label}</span>
+                   <ChevronRight size={16} className="text-gray-300" />
+                </div>
+             ))}
+          </div>
+          
+          <button className="w-full bg-white py-3 rounded-xl text-sm font-medium text-gray-600 shadow-sm flex items-center justify-center gap-2 mt-4">
+             <LogOut size={16} /> 退出登录
+          </button>
+       </div>
+       
+       <div className="text-center text-xs text-gray-300 mt-6 pb-4">
+          门店端 v1.0.0
+       </div>
     </div>
   );
 
   return (
-    <div className="flex flex-col h-screen max-w-md mx-auto bg-gray-50 shadow-2xl relative">
-      {/* Content Area */}
-      {activeTab === 'home' && renderHome()}
-      {activeTab === 'order' && renderOrder()}
-      {activeTab === 'history' && renderHistory()}
-      {activeTab === 'profile' && renderProfile()}
+    <div className="flex flex-col h-full bg-gray-50 font-sans w-full shadow-2xl relative overflow-hidden">
+      {/* View Content */}
+      <div className="flex-1 overflow-hidden flex flex-col relative z-0">
+         {activeTab === 'home' && renderHome()}
+         {activeTab === 'history' && renderHistory()}
+         {activeTab === 'shop' && renderShop()}
+         {activeTab === 'profile' && renderProfile()}
+      </div>
 
-      {/* Bottom Navigation */}
-      <div className="bg-white border-t border-gray-200 h-16 flex items-center justify-around absolute bottom-0 left-0 right-0 z-50">
-        <button onClick={() => setActiveTab('home')} className={`flex flex-col items-center gap-1 ${activeTab === 'home' ? 'text-blue-600' : 'text-gray-400'}`}>
-          <Home size={20} />
-          <span className="text-[10px]">首页</span>
+      {/* Bottom Tabbar */}
+      <div className="bg-white border-t border-gray-100 h-[84px] pb-5 flex items-center justify-around z-40 shrink-0">
+        <button 
+          onClick={() => setActiveTab('home')} 
+          className={`flex flex-col items-center gap-1 w-16 transition-colors ${activeTab === 'home' ? 'text-green-600' : 'text-gray-400 hover:text-gray-600'}`}
+        >
+           <Home size={24} strokeWidth={activeTab === 'home' ? 2.5 : 2} />
+           <span className="text-[10px] font-medium">首页</span>
         </button>
-        <button onClick={() => setActiveTab('order')} className={`flex flex-col items-center gap-1 ${activeTab === 'order' ? 'text-blue-600' : 'text-gray-400'}`}>
-          <ShoppingBag size={20} />
-          <span className="text-[10px]">订货</span>
+        <button 
+          onClick={() => setActiveTab('history')} 
+          className={`flex flex-col items-center gap-1 w-16 transition-colors ${activeTab === 'history' ? 'text-green-600' : 'text-gray-400 hover:text-gray-600'}`}
+        >
+           <FileText size={24} strokeWidth={activeTab === 'history' ? 2.5 : 2} />
+           <span className="text-[10px] font-medium">订单</span>
         </button>
-        <button onClick={() => setActiveTab('history')} className={`flex flex-col items-center gap-1 ${activeTab === 'history' ? 'text-blue-600' : 'text-gray-400'}`}>
-          <Clock size={20} />
-          <span className="text-[10px]">订单</span>
+        <button 
+          onClick={() => setActiveTab('shop')} 
+          className={`flex flex-col items-center gap-1 w-16 transition-colors ${activeTab === 'shop' ? 'text-green-600' : 'text-gray-400 hover:text-gray-600'}`}
+        >
+           <div className={`w-10 h-10 rounded-full flex items-center justify-center ${activeTab === 'shop' ? 'bg-green-500 text-white shadow-lg shadow-green-200' : 'bg-green-50 text-green-600'}`}>
+              <ShoppingCart size={20} fill={activeTab === 'shop' ? 'white' : 'none'} />
+           </div>
+           <span className="text-[10px] font-medium text-green-600 mt-0.5">下单</span>
         </button>
-        <button onClick={() => setActiveTab('profile')} className={`flex flex-col items-center gap-1 ${activeTab === 'profile' ? 'text-blue-600' : 'text-gray-400'}`}>
-          <User size={20} />
-          <span className="text-[10px]">我的</span>
+        <button 
+          onClick={() => setActiveTab('profile')} 
+          className={`flex flex-col items-center gap-1 w-16 transition-colors ${activeTab === 'profile' ? 'text-green-600' : 'text-gray-400 hover:text-gray-600'}`}
+        >
+           <User size={24} strokeWidth={activeTab === 'profile' ? 2.5 : 2} />
+           <span className="text-[10px] font-medium">我的</span>
         </button>
       </div>
     </div>

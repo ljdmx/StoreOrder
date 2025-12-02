@@ -188,17 +188,17 @@ const CategoryList: React.FC = () => {
             </div>
           ) : (
             // Updated grid for 2xl screens
-            <div className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
                {filteredCategories.map(cat => (
-                 <div key={cat.id} className="bg-white border border-gray-200 rounded-lg p-5 shadow-sm hover:shadow-md transition-shadow group flex flex-col">
-                    <div className="flex justify-between items-start mb-4">
+                 <div key={cat.id} className="bg-white border border-gray-200 rounded-lg p-5 shadow-sm hover:shadow-md transition-shadow group flex flex-col h-full">
+                    <div className="flex justify-between items-start mb-4 pb-3 border-b border-gray-50">
                        <div className="flex items-center gap-3">
                           <div className="w-10 h-10 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center">
                              <Layers size={20} />
                           </div>
                           <div>
-                             <h3 className="font-bold text-gray-900">{cat.name}</h3>
-                             <div className="text-xs text-gray-400 mt-0.5">{cat.code}</div>
+                             <h3 className="font-bold text-gray-900 text-lg">{cat.name}</h3>
+                             <div className="text-xs text-gray-400 mt-0.5 font-mono">{cat.code}</div>
                           </div>
                        </div>
                        <button className="p-1.5 hover:bg-gray-100 rounded text-gray-400 hover:text-gray-600">
@@ -207,25 +207,29 @@ const CategoryList: React.FC = () => {
                     </div>
 
                     <div className="mb-4 flex-1">
-                       <h4 className="text-xs font-medium text-gray-500 mb-2 uppercase tracking-wider">子分类</h4>
+                       <h4 className="text-xs font-medium text-gray-500 mb-3 uppercase tracking-wider flex items-center gap-2">
+                         <Tag size={12} /> 二级子分类
+                       </h4>
                        <div className="flex flex-wrap gap-2">
                           {cat.children?.map(child => (
-                            <span key={child.id} className="px-2.5 py-1 bg-gray-100 text-gray-600 text-xs rounded-md border border-gray-200 flex items-center gap-1.5 group/tag hover:bg-blue-50 hover:text-blue-600 hover:border-blue-100 transition-colors cursor-pointer">
+                            <span key={child.id} className="px-3 py-1.5 bg-gray-50 text-gray-700 text-sm rounded-md border border-gray-200 flex items-center gap-2 group/tag hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200 transition-colors cursor-pointer">
                                {child.name}
-                               <span className="w-4 h-4 rounded-full bg-white text-[10px] flex items-center justify-center text-gray-400 group-hover/tag:text-blue-500">{child.productCount}</span>
+                               <span className="min-w-[1.25rem] h-5 rounded-full bg-white text-xs flex items-center justify-center text-gray-400 group-hover/tag:text-blue-500 shadow-sm border border-gray-100 px-1">{child.productCount}</span>
                             </span>
                           ))}
-                          <button className="px-2 py-1 border border-dashed border-gray-300 rounded-md text-gray-400 text-xs hover:border-blue-400 hover:text-blue-500 flex items-center gap-1 transition-colors">
-                             <Plus size={12} />
+                          <button className="px-3 py-1.5 border border-dashed border-gray-300 rounded-md text-gray-400 text-sm hover:border-blue-400 hover:text-blue-500 flex items-center gap-1 transition-colors bg-white">
+                             <Plus size={14} /> 添加
                           </button>
                        </div>
                     </div>
 
-                    <div className="pt-4 border-t border-gray-100 flex items-center justify-between text-sm">
+                    <div className="pt-4 border-t border-gray-100 flex items-center justify-between text-sm mt-auto">
                        <div className="text-gray-500">
-                          商品总数: <span className="font-medium text-gray-900">{cat.productCount + (cat.children?.reduce((a,c)=>a+c.productCount,0) || 0)}</span>
+                          商品总数: <span className="font-bold text-gray-900 ml-1">{cat.productCount + (cat.children?.reduce((a,c)=>a+c.productCount,0) || 0)}</span>
                        </div>
-                       <button className="text-blue-600 hover:underline text-xs">管理分类</button>
+                       <button className="text-blue-600 hover:text-blue-800 text-xs font-medium flex items-center gap-1">
+                          查看详情 <ChevronRight size={12} />
+                       </button>
                     </div>
                  </div>
                ))}

@@ -1,4 +1,5 @@
 
+
 import { Order, OrderStatus, Product, Store, DashboardStats, User, SummaryStats, Category } from '../types';
 
 export const MOCK_USER = {
@@ -35,16 +36,16 @@ export const MOCK_STORES: Store[] = [
 
 // Product Units updated to B2B standards (Box, Case, Pack)
 export const MOCK_PRODUCTS: Product[] = [
-  { id: 'p1', name: '有机生菜', category: '叶菜类', spec: '5kg/箱', unit: '箱', price: 45.0, imageUrl: 'https://picsum.photos/id/292/200/200', isActive: true, minOrder: 2, maxOrder: 50, stock: 500 },
-  { id: 'p2', name: '红熟番茄', category: '根茎类', spec: '15kg/筐', unit: '筐', price: 68.0, imageUrl: 'https://picsum.photos/id/1080/200/200', isActive: true, minOrder: 1, maxOrder: 20, stock: 200 },
-  { id: 'p3', name: '本地黄瓜', category: '根茎类', spec: '10kg/袋', unit: '袋', price: 35.0, imageUrl: 'https://picsum.photos/id/225/200/200', isActive: true, minOrder: 2, maxOrder: 30, stock: 1000 },
-  { id: 'p4', name: '黄心土豆', category: '根茎类', spec: '25kg/袋', unit: '袋', price: 42.0, imageUrl: 'https://picsum.photos/id/75/200/200', isActive: true, minOrder: 1, maxOrder: 20, stock: 50 },
-  { id: 'p5', name: '水豆腐', category: '豆类', spec: '12盒/板', unit: '板', price: 24.0, imageUrl: 'https://picsum.photos/id/1070/200/200', isActive: true, minOrder: 5, maxOrder: 100, stock: 100 },
-  { id: 'p6', name: '精选五花肉', category: '肉类', spec: '2.5kg/条', unit: '条', price: 85.0, imageUrl: 'https://picsum.photos/id/102/200/200', isActive: true, minOrder: 2, maxOrder: 50, stock: 100 },
-  { id: 'p7', name: '冷冻鸡胸肉', category: '肉类', spec: '10kg/箱', unit: '箱', price: 120.0, imageUrl: 'https://picsum.photos/id/250/200/200', isActive: true, minOrder: 1, maxOrder: 20, stock: 300 },
-  { id: 'p8', name: '鲜活基围虾', category: '海鲜类', spec: '5kg/箱', unit: '箱', price: 280.0, imageUrl: 'https://picsum.photos/id/80/200/200', isActive: false, minOrder: 1, maxOrder: 5, stock: 0 },
-  { id: 'p9', name: '小黄姜', category: '调味类', spec: '2kg/网袋', unit: '袋', price: 18.0, imageUrl: 'https://picsum.photos/id/120/200/200', isActive: true, minOrder: 2, maxOrder: 50, stock: 150 },
-  { id: 'p10', name: '独头蒜', category: '调味类', spec: '5kg/袋', unit: '袋', price: 55.0, imageUrl: 'https://picsum.photos/id/130/200/200', isActive: true, minOrder: 1, maxOrder: 30, stock: 200 },
+  { id: 'p1', name: '有机生菜', category: '叶菜类', spec: '5kg/箱', unit: '箱', price: 45.0, imageUrl: 'https://images.unsplash.com/photo-1622206151226-18ca2c9ab4a1?auto=format&fit=crop&w=300&q=80', isActive: true, minOrder: 2, maxOrder: 50, stock: 500 },
+  { id: 'p2', name: '红熟番茄', category: '根茎类', spec: '15kg/筐', unit: '筐', price: 68.0, imageUrl: 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&w=300&q=80', isActive: true, minOrder: 1, maxOrder: 20, stock: 200 },
+  { id: 'p3', name: '本地黄瓜', category: '根茎类', spec: '10kg/袋', unit: '袋', price: 35.0, imageUrl: 'https://images.unsplash.com/photo-1449300079323-02e209d9d3a6?auto=format&fit=crop&w=300&q=80', isActive: true, minOrder: 2, maxOrder: 30, stock: 1000 },
+  { id: 'p4', name: '黄心土豆', category: '根茎类', spec: '25kg/袋', unit: '袋', price: 42.0, imageUrl: 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=300&q=80', isActive: true, minOrder: 1, maxOrder: 20, stock: 50 },
+  { id: 'p5', name: '水豆腐', category: '豆类', spec: '12盒/板', unit: '板', price: 24.0, imageUrl: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=300&q=80', isActive: true, minOrder: 5, maxOrder: 100, stock: 100 },
+  { id: 'p6', name: '精选五花肉', category: '肉类', spec: '2.5kg/条', unit: '条', price: 85.0, imageUrl: 'https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?auto=format&fit=crop&w=300&q=80', isActive: true, minOrder: 2, maxOrder: 50, stock: 100 },
+  { id: 'p7', name: '冷冻鸡胸肉', category: '肉类', spec: '10kg/箱', unit: '箱', price: 120.0, imageUrl: 'https://images.unsplash.com/photo-1604503468506-a8da13d82791?auto=format&fit=crop&w=300&q=80', isActive: true, minOrder: 1, maxOrder: 20, stock: 300 },
+  { id: 'p8', name: '鲜活基围虾', category: '海鲜类', spec: '5kg/箱', unit: '箱', price: 280.0, imageUrl: 'https://images.unsplash.com/photo-1565680018434-b513d5e5fd47?auto=format&fit=crop&w=300&q=80', isActive: false, minOrder: 1, maxOrder: 5, stock: 0 },
+  { id: 'p9', name: '小黄姜', category: '调味类', spec: '2kg/网袋', unit: '袋', price: 18.0, imageUrl: 'https://images.unsplash.com/photo-1635313175865-c8e4f55a7322?auto=format&fit=crop&w=300&q=80', isActive: true, minOrder: 2, maxOrder: 50, stock: 150 },
+  { id: 'p10', name: '独头蒜', category: '调味类', spec: '5kg/袋', unit: '袋', price: 55.0, imageUrl: 'https://images.unsplash.com/photo-1606521820421-3b7c8c368625?auto=format&fit=crop&w=300&q=80', isActive: true, minOrder: 1, maxOrder: 30, stock: 200 },
 ];
 
 export const MOCK_CATEGORIES: Category[] = [
@@ -108,11 +109,13 @@ export const MOCK_ORDERS: Order[] = [
     storeRegion: '盘龙区',
     status: OrderStatus.Auditing,
     orderDate: '2023-11-26 10:15',
-    itemCount: 1,
-    totalQuantity: 15,
+    itemCount: 3,
+    totalQuantity: 45,
     auditorName: '张审核',
     items: [
-      { productId: 'p3', productName: '本地黄瓜', spec: '10kg/袋', unit: '袋', quantityOrdered: 15, price: 35.0 }
+      { productId: 'p3', productName: '本地黄瓜', spec: '10kg/袋', unit: '袋', quantityOrdered: 15, price: 35.0 },
+      { productId: 'p1', productName: '有机生菜', spec: '5kg/箱', unit: '箱', quantityOrdered: 10, price: 45.0 },
+      { productId: 'p5', productName: '水豆腐', spec: '12盒/板', unit: '板', quantityOrdered: 20, price: 24.0 }
     ],
     timeline: [
       { time: '2023-11-26 10:15', title: '订单已提交', user: '李经理', status: 'completed' },
@@ -126,10 +129,11 @@ export const MOCK_ORDERS: Order[] = [
     storeRegion: '西山区',
     status: OrderStatus.Submitted,
     orderDate: '2023-11-26 11:00',
-    itemCount: 1,
-    totalQuantity: 10,
+    itemCount: 2,
+    totalQuantity: 25,
     items: [
-      { productId: 'p5', productName: '水豆腐', spec: '12盒/板', unit: '板', quantityOrdered: 10, price: 24.0 }
+      { productId: 'p5', productName: '水豆腐', spec: '12盒/板', unit: '板', quantityOrdered: 10, price: 24.0 },
+      { productId: 'p7', productName: '冷冻鸡胸肉', spec: '10kg/箱', unit: '箱', quantityOrdered: 15, price: 120.0 }
     ],
     timeline: [
       { time: '2023-11-26 11:00', title: '订单已提交', user: '赵经理', status: 'completed' },
@@ -141,11 +145,20 @@ export const MOCK_ORDERS: Order[] = [
     storeId: 's5',
     storeName: '呈贡区大学城店',
     storeRegion: '呈贡区',
-    status: OrderStatus.Pending,
-    orderDate: '2023-11-25 16:00',
-    itemCount: 0,
-    totalQuantity: 0,
-    items: []
+    status: OrderStatus.Submitted,
+    orderDate: '2023-11-26 11:15',
+    itemCount: 4,
+    totalQuantity: 60,
+    items: [
+       { productId: 'p9', productName: '小黄姜', spec: '2kg/网袋', unit: '袋', quantityOrdered: 20, price: 18.0 },
+       { productId: 'p10', productName: '独头蒜', spec: '5kg/袋', unit: '袋', quantityOrdered: 20, price: 55.0 },
+       { productId: 'p3', productName: '本地黄瓜', spec: '10kg/袋', unit: '袋', quantityOrdered: 10, price: 35.0 },
+       { productId: 'p4', productName: '黄心土豆', spec: '25kg/袋', unit: '袋', quantityOrdered: 10, price: 42.0 },
+    ],
+    timeline: [
+      { time: '2023-11-26 11:15', title: '订单已提交', user: '刘经理', status: 'completed' },
+      { time: '2023-11-26 11:15', title: '等待审核', status: 'pending' },
+    ]
   }
 ];
 

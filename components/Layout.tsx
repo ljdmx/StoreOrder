@@ -12,7 +12,8 @@ import {
   Menu,
   ChevronLeft,
   ClipboardList,
-  Tag
+  Tag,
+  Layers
 } from 'lucide-react';
 import { MOCK_USER } from '../services/mockData';
 
@@ -32,7 +33,7 @@ const Layout: React.FC<LayoutProps> = ({ currentView, onChangeView, onLogout, ch
     { id: 'dashboard', label: '数据看板', icon: LayoutDashboard },
     { id: 'orders', label: '订单管理', icon: ShoppingCart },
     { id: 'products', label: '商品管理', icon: Package },
-    { id: 'categories', label: '商品分类', icon: Tag },
+    { id: 'categories', label: '商品分类', icon: Layers }, // Updated icon and ensured 4 chars
     { id: 'stores', label: '门店列表', icon: Store },
     { id: 'summary', label: '清单汇总', icon: ClipboardList },
     { id: 'users', label: '权限管理', icon: Users },
