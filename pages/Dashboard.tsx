@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { 
   BarChart, 
@@ -106,9 +107,10 @@ const Dashboard: React.FC = () => {
       </div>
 
       {/* Charts Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      {/* Updated grid for 2xl screens to give more space to the trend chart */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 2xl:grid-cols-4 gap-6">
         {/* Trend Chart */}
-        <div className="bg-white p-6 rounded-lg border border-arco-border shadow-sm lg:col-span-2">
+        <div className="bg-white p-6 rounded-lg border border-arco-border shadow-sm lg:col-span-2 2xl:col-span-3">
           <h3 className="text-lg font-bold text-arco-text-title mb-6">订货趋势 (近7日)</h3>
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
@@ -143,7 +145,7 @@ const Dashboard: React.FC = () => {
         </div>
 
         {/* Top Products Chart */}
-        <div className="bg-white p-6 rounded-lg border border-arco-border shadow-sm">
+        <div className="bg-white p-6 rounded-lg border border-arco-border shadow-sm col-span-1">
           <h3 className="text-lg font-bold text-arco-text-title mb-6">热门商品 (今日)</h3>
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">

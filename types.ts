@@ -1,3 +1,4 @@
+
 export enum OrderStatus {
   Pending = 'Pending',       // 未下单/待提交
   Submitted = 'Submitted',   // 已下单/待审核
@@ -13,6 +14,19 @@ export interface User {
   avatar: string;
   phone?: string;
   status: 'active' | 'inactive';
+}
+
+export interface Category {
+  id: string;
+  name: string;
+  code: string;
+  level: 1 | 2;
+  parentId?: string;
+  productCount: number;
+  status: 'active' | 'inactive';
+  sort: number;
+  imageUrl?: string;
+  children?: Category[];
 }
 
 export interface Product {

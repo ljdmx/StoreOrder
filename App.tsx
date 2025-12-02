@@ -1,8 +1,10 @@
+
 import React, { useState, useEffect } from 'react';
 import Layout from './components/Layout';
 import Dashboard from './pages/Dashboard';
 import OrderList from './pages/OrderList';
 import ProductList from './pages/ProductList';
+import CategoryList from './pages/CategoryList';
 import StoreList from './pages/StoreList';
 import UserList from './pages/UserList';
 import SummaryReport from './pages/SummaryReport';
@@ -11,7 +13,7 @@ import StoreApp from './pages/mobile/StoreApp';
 import ProcurementApp from './pages/mobile/ProcurementApp';
 
 // Define the view type
-type View = 'dashboard' | 'orders' | 'products' | 'stores' | 'users' | 'summary';
+type View = 'dashboard' | 'orders' | 'products' | 'categories' | 'stores' | 'users' | 'summary';
 type AppMode = 'admin' | 'mobile-store' | 'mobile-procurement';
 
 const App: React.FC = () => {
@@ -75,6 +77,7 @@ const App: React.FC = () => {
       case 'dashboard': return <Dashboard />;
       case 'orders': return <OrderList />;
       case 'products': return <ProductList />;
+      case 'categories': return <CategoryList />;
       case 'stores': return <StoreList />;
       case 'users': return <UserList />;
       case 'summary': return <SummaryReport />;

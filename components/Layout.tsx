@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { 
   LayoutDashboard, 
@@ -10,11 +11,12 @@ import {
   LogOut, 
   Menu,
   ChevronLeft,
-  ClipboardList
+  ClipboardList,
+  Tag
 } from 'lucide-react';
 import { MOCK_USER } from '../services/mockData';
 
-type View = 'dashboard' | 'orders' | 'products' | 'stores' | 'users' | 'summary';
+type View = 'dashboard' | 'orders' | 'products' | 'categories' | 'stores' | 'users' | 'summary';
 
 interface LayoutProps {
   currentView: View;
@@ -30,6 +32,7 @@ const Layout: React.FC<LayoutProps> = ({ currentView, onChangeView, onLogout, ch
     { id: 'dashboard', label: '数据看板', icon: LayoutDashboard },
     { id: 'orders', label: '订单管理', icon: ShoppingCart },
     { id: 'products', label: '商品管理', icon: Package },
+    { id: 'categories', label: '商品分类', icon: Tag },
     { id: 'stores', label: '门店列表', icon: Store },
     { id: 'summary', label: '清单汇总', icon: ClipboardList },
     { id: 'users', label: '权限管理', icon: Users },
@@ -128,8 +131,9 @@ const Layout: React.FC<LayoutProps> = ({ currentView, onChangeView, onLogout, ch
         </header>
 
         {/* Page Content Scrollable Area */}
-        <div className="flex-1 overflow-auto p-6 custom-scrollbar">
-          <div className="max-w-[1600px] mx-auto">
+        <div className="flex-1 overflow-auto bg-arco-bg custom-scrollbar">
+          {/* Removed max-w constraint, added fluid padding */}
+          <div className="w-full h-full p-4 md:p-6 lg:p-8">
              {children}
           </div>
         </div>

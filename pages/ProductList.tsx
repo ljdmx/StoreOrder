@@ -160,7 +160,8 @@ const ProductList: React.FC = () => {
             </table>
             </div>
         ) : (
-            <div className="p-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+            // Updated Grid: added 2xl:grid-cols-6 and xl:grid-cols-5
+            <div className="p-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6">
                 {filteredProducts.map((product, idx) => (
                     <div key={product.id} className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow group flex flex-col">
                         <div className="relative aspect-square bg-gray-100 overflow-hidden">
@@ -180,7 +181,6 @@ const ProductList: React.FC = () => {
                                 <span className="text-xs bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded">{product.category}</span>
                             </div>
                             <h3 className="font-bold text-gray-900 mb-1 line-clamp-1">{product.name}</h3>
-                            {/* Modified here: Removed /{product.unit} to avoid duplication */}
                             <p className="text-sm text-gray-500 mb-2">{product.spec}</p>
                             
                             {/* Min/Max Order Display Optimization */}

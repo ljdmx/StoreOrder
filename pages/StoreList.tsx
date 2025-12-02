@@ -170,7 +170,8 @@ const StoreList: React.FC = () => {
         <div className="bg-gray-50/30">
         {viewMode === 'card' ? (
             // CARD VIEW
-            <div className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            // Updated grid for 2xl screens
+            <div className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
                 {MOCK_STORES.map((store) => (
                 <div key={store.id} className="bg-white rounded border border-gray-200 hover:border-blue-400 hover:shadow-md transition-all p-5 flex flex-col group relative">
                     <div className="flex justify-between items-start mb-3">

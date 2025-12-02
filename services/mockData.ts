@@ -1,5 +1,5 @@
 
-import { Order, OrderStatus, Product, Store, DashboardStats, User, SummaryStats } from '../types';
+import { Order, OrderStatus, Product, Store, DashboardStats, User, SummaryStats, Category } from '../types';
 
 export const MOCK_USER = {
   id: 'u1',
@@ -45,6 +45,39 @@ export const MOCK_PRODUCTS: Product[] = [
   { id: 'p8', name: '鲜活基围虾', category: '海鲜类', spec: '5kg/箱', unit: '箱', price: 280.0, imageUrl: 'https://picsum.photos/id/80/200/200', isActive: false, minOrder: 1, maxOrder: 5, stock: 0 },
   { id: 'p9', name: '小黄姜', category: '调味类', spec: '2kg/网袋', unit: '袋', price: 18.0, imageUrl: 'https://picsum.photos/id/120/200/200', isActive: true, minOrder: 2, maxOrder: 50, stock: 150 },
   { id: 'p10', name: '独头蒜', category: '调味类', spec: '5kg/袋', unit: '袋', price: 55.0, imageUrl: 'https://picsum.photos/id/130/200/200', isActive: true, minOrder: 1, maxOrder: 30, stock: 200 },
+];
+
+export const MOCK_CATEGORIES: Category[] = [
+  {
+    id: 'c1', name: '新鲜蔬菜', code: 'C01', level: 1, productCount: 45, status: 'active', sort: 1,
+    children: [
+      { id: 'c1-1', name: '叶菜类', code: 'C0101', level: 2, parentId: 'c1', productCount: 20, status: 'active', sort: 1 },
+      { id: 'c1-2', name: '根茎类', code: 'C0102', level: 2, parentId: 'c1', productCount: 15, status: 'active', sort: 2 },
+      { id: 'c1-3', name: '菌菇类', code: 'C0103', level: 2, parentId: 'c1', productCount: 10, status: 'active', sort: 3 },
+    ]
+  },
+  {
+    id: 'c2', name: '肉禽蛋品', code: 'C02', level: 1, productCount: 30, status: 'active', sort: 2,
+    children: [
+      { id: 'c2-1', name: '猪肉', code: 'C0201', level: 2, parentId: 'c2', productCount: 12, status: 'active', sort: 1 },
+      { id: 'c2-2', name: '禽肉', code: 'C0202', level: 2, parentId: 'c2', productCount: 10, status: 'active', sort: 2 },
+      { id: 'c2-3', name: '蛋类', code: 'C0203', level: 2, parentId: 'c2', productCount: 8, status: 'active', sort: 3 },
+    ]
+  },
+  {
+    id: 'c3', name: '海鲜水产', code: 'C03', level: 1, productCount: 18, status: 'active', sort: 3,
+    children: [
+      { id: 'c3-1', name: '鱼类', code: 'C0301', level: 2, parentId: 'c3', productCount: 10, status: 'active', sort: 1 },
+      { id: 'c3-2', name: '虾蟹', code: 'C0302', level: 2, parentId: 'c3', productCount: 8, status: 'active', sort: 2 },
+    ]
+  },
+  {
+    id: 'c4', name: '调味干货', code: 'C04', level: 1, productCount: 25, status: 'active', sort: 4,
+    children: [
+      { id: 'c4-1', name: '调味品', code: 'C0401', level: 2, parentId: 'c4', productCount: 15, status: 'active', sort: 1 },
+      { id: 'c4-2', name: '干货', code: 'C0402', level: 2, parentId: 'c4', productCount: 10, status: 'active', sort: 2 },
+    ]
+  },
 ];
 
 export const MOCK_ORDERS: Order[] = [
